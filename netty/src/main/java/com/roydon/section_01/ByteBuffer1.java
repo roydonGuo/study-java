@@ -30,6 +30,7 @@ public class ByteBuffer1 {
                     log.debug("读取到的字节 {}", (char) b);
                 }
                 byteBuffer.clear();
+//                byteBuffer.compact();
             }
         } catch (Exception e) {
             e.printStackTrace();
