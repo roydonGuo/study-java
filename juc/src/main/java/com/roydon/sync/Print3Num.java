@@ -1,11 +1,13 @@
 package com.roydon.sync;
 
+import lombok.AllArgsConstructor;
+import lombok.SneakyThrows;
+
 /**
- * Print3Num
+ * java三线程交替打印0~100
  *
  * @AUTHOR: roydon
  * @DATE: 2023/8/31
- * java三线程交替打印0~100
  **/
 public class Print3Num {
 
@@ -14,23 +16,17 @@ public class Print3Num {
     private static final int hundred = 100;
     private static final int threadCount = 3;
 
+    @AllArgsConstructor
     private static class Print extends Thread {
         private int threadId;
 
-        public Print(int threadId) {
-            this.threadId = threadId;
-        }
-
+        @SneakyThrows
         @Override
         public void run() {
             while (num < hundred) {
                 synchronized (lock) {
                     while (num % threadCount != threadId) {
-                        try {
-                            lock.wait();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                        lock.wait();
                     }
                     if (num <= hundred) {
                         System.out.println("Thread[" + threadId + "]: " + num);

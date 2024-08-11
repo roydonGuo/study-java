@@ -12,6 +12,7 @@
         <module>netty</module>
         <module>juc</module>
         <module>jvm</module>
+        <module>design-patterns</module>
     </modules>
 
     <properties>

@@ -20,36 +20,36 @@ public class WaitNotifyPrintABC {
 
     public static void main(String[] args) throws InterruptedException {
 
-        WaitNotify waitNotify = new WaitNotify(1, 3);
-
-        new Thread(() -> {
-            waitNotify.print("A", 1, 2);
-        }).start();
-        new Thread(() -> {
-            waitNotify.print("B", 2, 3);
-        }).start();
-        new Thread(() -> {
-            waitNotify.print("C", 3, 1);
-        }).start();
+//        WaitNotify waitNotify = new WaitNotify(1, 3);
+//
+//        new Thread(() -> {
+//            waitNotify.print("A", 1, 2);
+//        }).start();
+//        new Thread(() -> {
+//            waitNotify.print("B", 2, 3);
+//        }).start();
+//        new Thread(() -> {
+//            waitNotify.print("C", 3, 1);
+//        }).start();
 
         // ====================================
 
-//        ParkUnpark parkUnpark = new ParkUnpark(3);
-//        t1 = new Thread(() -> {
-//            parkUnpark.print("a", t2);
-//        });
-//        t2 = new Thread(() -> {
-//            parkUnpark.print("b", t3);
-//        });
-//        t3 = new Thread(() -> {
-//            parkUnpark.print("c", t1);
-//        });
-//
-//        t1.start();
-//        t2.start();
-//        t3.start();
-//
-//        LockSupport.unpark(t1);
+        ParkUnpark parkUnpark = new ParkUnpark(3);
+        t1 = new Thread(() -> {
+            parkUnpark.print("a", t2);
+        });
+        t2 = new Thread(() -> {
+            parkUnpark.print("b", t3);
+        });
+        t3 = new Thread(() -> {
+            parkUnpark.print("c", t1);
+        });
+
+        t1.start();
+        t2.start();
+        t3.start();
+
+        LockSupport.unpark(t1);
 
         // =================================
 
@@ -121,10 +121,14 @@ class ParkUnpark {
     }
 }
 
+/**
+ * 3、reentrantLock await signal 顺序打印 abc
+ */
 @AllArgsConstructor
 class AwaitSignal extends ReentrantLock {
     private int loopCount;
 
+    @SneakyThrows
     public void print(String name, Condition cur, Condition next) {
         for (int i = 0; i < loopCount; i++) {
             lock();
@@ -132,8 +136,6 @@ class AwaitSignal extends ReentrantLock {
                 cur.await();
                 System.out.println(LocalTime.now() + " --- " + name);
                 next.signal();
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
             } finally {
                 unlock();
             }

@@ -20,6 +20,10 @@ import java.util.logging.Logger;
 public class ThreadPoolExecutorDemo {
 
     public static void main(String[] args) {
+        /**
+         * io密集型场景，定义线程数为 cpu线程数*2+1
+         * cpu密集型，定义线程数为 cpu核数+1
+         */
         System.out.println("cpu核心数：" + Runtime.getRuntime().availableProcessors());
         AtomicInteger integer = new AtomicInteger(1);
         ArrayBlockingQueue<Runnable> queue = new ArrayBlockingQueue<>(2);

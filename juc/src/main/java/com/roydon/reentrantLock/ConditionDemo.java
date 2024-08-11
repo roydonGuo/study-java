@@ -13,12 +13,12 @@ import java.util.concurrent.locks.ReentrantLock;
  **/
 public class ConditionDemo {
 
-    private static boolean hasCigarette = false;
-    private static boolean hasTakeout = false;
+    private static boolean beginGenshin = false;
+    private static boolean beginHonkai = false;
 
     final static ReentrantLock ROOM = new ReentrantLock();
-    static Condition waitCigaretteSet = ROOM.newCondition();
-    static Condition waitTakeoutSet = ROOM.newCondition();
+    static Condition waitGenshinSet = ROOM.newCondition();
+    static Condition waitHonkaiSet = ROOM.newCondition();
 
     public static void main(String[] args) throws InterruptedException {
 
@@ -26,10 +26,10 @@ public class ConditionDemo {
             ROOM.lock();
             try {
                 System.out.println(LocalTime.now() + "原神，");
-                while (!hasCigarette) {
+                while (!beginGenshin) {
                     System.out.println(LocalTime.now() + "不启动？");
                     try {
-                        waitCigaretteSet.await();
+                        waitGenshinSet.await();
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
@@ -44,14 +44,14 @@ public class ConditionDemo {
             ROOM.lock();
             try {
                 System.out.println(LocalTime.now() + "星铁，");
-                while (!hasTakeout) {
+//                while (!beginHonkai) {
                     System.out.println(LocalTime.now() + "不启动？");
                     try {
-                        waitTakeoutSet.await();
+                        waitHonkaiSet.await();
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
-                }
+//                }
                 System.out.println(LocalTime.now() + "启动！");
             } finally {
                 ROOM.unlock();
@@ -66,8 +66,8 @@ public class ConditionDemo {
         new Thread(() -> {
             ROOM.lock();
             try {
-                hasCigarette = true;
-                waitCigaretteSet.signal(); // notify waitCigaretteSet
+                beginGenshin = true;
+                waitGenshinSet.signal(); // notify waitGenshinSet
             } finally {
                 ROOM.unlock();
             }
@@ -78,8 +78,8 @@ public class ConditionDemo {
         new Thread(() -> {
             ROOM.lock();
             try {
-                hasTakeout = true;
-                waitTakeoutSet.signal(); // notify waitCigaretteSet
+                beginHonkai = true;
+                waitHonkaiSet.signal(); // notify waitHonkaiSet
             } finally {
                 ROOM.unlock();
             }
